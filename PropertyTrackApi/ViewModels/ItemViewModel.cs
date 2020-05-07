@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 
-namespace PropertyTrackApi.Models
+namespace PropertyTrackApi.ViewModels
 {
-    public class Item
+    public class ItemViewModel
     {
         public int Id { get; set; }
 
@@ -14,8 +14,9 @@ namespace PropertyTrackApi.Models
 
         public double PurchasePrice { get; set; }
 
-        public int CategoryId { get; set; }
+        public string CategoryId { get; set; }
 
-        public Category Category { get; set; }
+        public string CategoryName { get; set; }
+
     }
 }

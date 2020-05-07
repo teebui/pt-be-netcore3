@@ -22,6 +22,11 @@ namespace PropertyTrackApi
         {
             services.AddDbContext<PropertyTrackContext>(opt => opt.UseInMemoryDatabase("PropertyTrackDB"));
 
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
+
             services.AddControllers();
         }
 

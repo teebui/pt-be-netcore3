@@ -9,8 +9,16 @@ namespace PropertyTrackApi.Models
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Item>()
+                .HasOne(p => p.Category)
+                .WithMany(b => b.Items);
+        }
+
         public DbSet<Item> Items { get; set; }
 
         public DbSet<Category> Categories { get; set; }
+
     }
 }

@@ -11,50 +11,48 @@ namespace PropertyTrackApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ItemsController : ControllerBase
+    public class CategoriesController : ControllerBase
     {
         private readonly PropertyTrackContext _context;
 
-        public ItemsController(PropertyTrackContext context)
+        public CategoriesController(PropertyTrackContext context)
         {
             _context = context;
         }
 
-        // GET: api/Items
+        // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Item>>> GetItems()
+        public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
         {
-            return await _context.Items.ToListAsync();
+            return await _context.Categories.ToListAsync();
         }
 
-        // GET: api/Items/5
+        // GET: api/Categories/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Item>> GetItem(int id)
+        public async Task<ActionResult<Category>> GetCategory(int id)
         {
-            Item item = await _context.Items
-                .Include(x => x.Category.Items)
-                .FirstOrDefaultAsync(x => x.Id.Equals(id));
+            var category = await _context.Categories.FindAsync(id);
 
-            if (item == null)
+            if (category == null)
             {
                 return NotFound();
             }
 
-            return item;
+            return category;
         }
 
-        // PUT: api/Items/5
+        // PUT: api/Categories/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutItem(int id, Item item)
+        public async Task<IActionResult> PutCategory(int id, Category category)
         {
-            if (id != item.Id)
+            if (id != category.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(item).State = EntityState.Modified;
+            _context.Entry(category).State = EntityState.Modified;
 
             try
             {
@@ -62,7 +60,7 @@ namespace PropertyTrackApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ItemExists(id))
+                if (!CategoryExists(id))
                 {
                     return NotFound();
                 }
@@ -75,37 +73,37 @@ namespace PropertyTrackApi.Controllers
             return NoContent();
         }
 
-        // POST: api/Items
+        // POST: api/Categories
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Item>> PostItem(Item item)
+        public async Task<ActionResult<Category>> PostCategory(Category category)
         {
-            _context.Items.Add(item);
+            _context.Categories.Add(category);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetItem", new { id = item.Id }, item);
+            return CreatedAtAction("GetCategory", new { id = category.Id }, category);
         }
 
-        // DELETE: api/Items/5
+        // DELETE: api/Categories/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Item>> DeleteItem(int id)
+        public async Task<ActionResult<Category>> DeleteCategory(int id)
         {
-            var item = await _context.Items.FindAsync(id);
-            if (item == null)
+            var category = await _context.Categories.FindAsync(id);
+            if (category == null)
             {
                 return NotFound();
             }
 
-            _context.Items.Remove(item);
+            _context.Categories.Remove(category);
             await _context.SaveChangesAsync();
 
-            return item;
+            return category;
         }
 
-        private bool ItemExists(int id)
+        private bool CategoryExists(int id)
         {
-            return _context.Items.Any(e => e.Id == id);
+            return _context.Categories.Any(e => e.Id == id);
         }
     }
 }
