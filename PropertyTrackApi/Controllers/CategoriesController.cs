@@ -27,13 +27,7 @@ namespace PropertyTrackApi.Controllers
         {
             return await _context.Categories
                 .Include(cat => cat.Items)
-                .Select(cat => new CategoryViewModel
-                {
-                    CategoryId = cat.Id,
-                    Name = cat.Name,
-                    Description = cat.Description,
-                    ItemsCount = cat.Items.Count
-                })
+                .Select(cat => new CategoryViewModel(cat))
                 .ToListAsync();
         }
 
@@ -42,6 +36,26 @@ namespace PropertyTrackApi.Controllers
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
             var category = await _context.Categories.FindAsync(id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            return category;
+        }
+
+        [HttpGet("{id}/items")]
+        public async Task<ActionResult<CategoryWithItemsViewModel>> GetCategoryWithItems(int id)
+        {
+            var category = await _context.Categories
+                .Where(c => c.Id == id)
+                .Include(c => c.Items)
+                .Select(c => new CategoryWithItemsViewModel(c)
+                {
+                    Items = c.Items.Select(i => new ItemViewModel(i))
+                })
+                .FirstOrDefaultAsync();
 
             if (category == null)
             {
