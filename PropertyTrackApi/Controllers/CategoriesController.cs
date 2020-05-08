@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PropertyTrackApi.Models;
+using PropertyTrackApi.ViewModels;
 
 namespace PropertyTrackApi.Controllers
 {
@@ -22,9 +23,18 @@ namespace PropertyTrackApi.Controllers
 
         // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
+        public async Task<ActionResult<IEnumerable<CategoryViewModel>>> GetCategories()
         {
-            return await _context.Categories.ToListAsync();
+            return await _context.Categories
+                .Include(cat => cat.Items)
+                .Select(cat => new CategoryViewModel
+                {
+                    CategoryId = cat.Id,
+                    Name = cat.Name,
+                    Description = cat.Description,
+                    ItemsCount = cat.Items.Count
+                })
+                .ToListAsync();
         }
 
         // GET: api/Categories/5
