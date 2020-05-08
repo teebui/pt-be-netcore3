@@ -30,12 +30,17 @@ namespace PropertyTrackApi
 
             services.AddCors(options =>
             {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
-                                builder =>
-                                {
-                                    builder.WithOrigins("http://localhost",
-                                                        "http://localhost:8080");
-                                });
+                options.AddPolicy(
+                    name: MyAllowSpecificOrigins,
+                    builder =>
+                    {
+                        // builder.WithOrigins("http://localhost",
+                        //                     "http://localhost:8080");
+
+                        builder.AllowAnyOrigin();
+                        builder.AllowAnyHeader();
+                        builder.AllowAnyMethod();
+                    });
             });
 
             services.AddControllers();
