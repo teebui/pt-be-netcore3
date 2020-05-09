@@ -12,8 +12,7 @@ namespace PropertyTrackApi.ViewModels
             Description = item.Description;
             PurchaseDateTime = item.PurchaseDateTime;
             PurchasePrice = item.PurchasePrice;
-            CategoryName = item.Category.Name;
-            CategoryId = item.CategoryId;
+            Category = new BaseCategoryViewModel(item.Category);
         }
         public int Id { get; set; }
 
@@ -25,8 +24,6 @@ namespace PropertyTrackApi.ViewModels
 
         public double PurchasePrice { get; set; }
 
-        public int CategoryId { get; set; }
-
-        public string CategoryName { get; set; }
+        public BaseCategoryViewModel Category { get; set;}
     }
 }

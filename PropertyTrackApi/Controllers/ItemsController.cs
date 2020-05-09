@@ -23,9 +23,12 @@ namespace PropertyTrackApi.Controllers
 
         // GET: api/Items
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Item>>> GetItems()
+        public async Task<ActionResult<IEnumerable<ItemViewModel>>> GetItems()
         {
-            return await _context.Items.ToListAsync();
+            return await _context.Items
+                .Include(i => i.Category)
+                .Select(i => new ItemViewModel(i))
+                .ToListAsync();
         }// GET: api/Items
 
          // GET: api/Items/5

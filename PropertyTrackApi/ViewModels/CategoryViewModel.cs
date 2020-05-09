@@ -3,21 +3,28 @@ using PropertyTrackApi.Models;
 
 namespace PropertyTrackApi.ViewModels
 {
-    public class CategoryViewModel
+    public class BaseCategoryViewModel
     {
-        public CategoryViewModel(Category category)
+        public BaseCategoryViewModel(Category category)
         {
-            CategoryId = category.Id;
+            Id = category.Id;
             Name = category.Name;
+        }
+
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+    public class CategoryViewModel : BaseCategoryViewModel
+    {
+        public CategoryViewModel(Category category): base(category)
+        {
+
             Description = category.Description;
             ItemsCount = category.Items.Count;
         }
 
-        public int CategoryId { get; set; }
-        public string Name { get; set; }
         public string Description { get; set; }
         public int ItemsCount { get; set; }
-
     }
 
     public class CategoryWithItemsViewModel: CategoryViewModel
