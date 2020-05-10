@@ -26,6 +26,7 @@ namespace PropertyTrackApi
         {
             services.AddDbContext<PropertyTrackContext>(opt => opt.UseInMemoryDatabase("PropertyTrackDB"));
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IItemService, ItemService>();
 
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>

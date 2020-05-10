@@ -50,10 +50,9 @@ namespace Services.Impl
                 ThrowNotFoundException(catId);
             }
 
-            _context.Entry(category).State = EntityState.Modified;
-
             try
             {
+                _context.Entry(category).State = EntityState.Modified;
                  await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException ex)

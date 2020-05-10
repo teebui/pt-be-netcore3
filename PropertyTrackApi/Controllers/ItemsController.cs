@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PropertyTrackApi.Models;
 using PropertyTrackApi.ViewModels;
+using Services;
 
 namespace PropertyTrackApi.Controllers
 {
@@ -14,30 +15,25 @@ namespace PropertyTrackApi.Controllers
     [ApiController]
     public class ItemsController : ControllerBase
     {
-        private readonly PropertyTrackContext _context;
+        private readonly IItemService _itemService;
 
-        public ItemsController(PropertyTrackContext context)
+        public ItemsController(IItemService itemService)
         {
-            _context = context;
+            _itemService = itemService;
         }
 
         // GET: api/Items
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ItemViewModel>>> GetItems()
         {
-            return await _context.Items
-                .Include(i => i.Category)
-                .Select(i => new ItemViewModel(i))
-                .ToListAsync();
+            return await _itemService.GetItemsAsync();
         }// GET: api/Items
 
          // GET: api/Items/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Item>> GetItem(int id)
+        public async Task<ActionResult<ItemViewModel>> GetItem(int id)
         {
-            Item item = await _context.Items
-                .Include(x => x.Category)
-                .FirstOrDefaultAsync(x => x.Id.Equals(id));
+            var item = await _itemService.GetItemAsync(id);
 
             if (item == null)
             {
@@ -58,23 +54,7 @@ namespace PropertyTrackApi.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(item).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ItemExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _itemService.UpdateItemAsync(id, item);   
 
             return NoContent();
         }
@@ -85,31 +65,29 @@ namespace PropertyTrackApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Item>> PostItem(Item item)
         {
-            _context.Items.Add(item);
-            await _context.SaveChangesAsync();
+            await _itemService.CreateItemAsync(item);
 
             return CreatedAtAction("GetItem", new { id = item.Id }, item);
         }
 
         // DELETE: api/Items/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Item>> DeleteItem(int id)
+        public async Task<ActionResult> DeleteItem(int id)
         {
-            var item = await _context.Items.FindAsync(id);
-            if (item == null)
+            try
+            {
+                await _itemService.DeleteItemAsync(id);
+            }
+            catch (NotFoundException)
             {
                 return NotFound();
             }
+            catch (CategoryServiceException)
+            {
+                return BadRequest();
+            }
 
-            _context.Items.Remove(item);
-            await _context.SaveChangesAsync();
-
-            return item;
-        }
-
-        private bool ItemExists(int id)
-        {
-            return _context.Items.Any(e => e.Id == id);
+            return NoContent();
         }
     }
 }
