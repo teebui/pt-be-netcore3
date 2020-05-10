@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Models;
 
 namespace PropertyTrackApi.Models
 {
@@ -19,6 +20,8 @@ namespace PropertyTrackApi.Models
         public DbSet<Item> Items { get; set; }
 
         public DbSet<Category> Categories { get; set; }
+
+        public DbSet<User> Users { get; set; }
 
     }
 }
