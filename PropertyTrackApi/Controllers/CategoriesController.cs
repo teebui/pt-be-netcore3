@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PropertyTrackApi.Models;
 using PropertyTrackApi.ViewModels;
+using Services;
 
 namespace PropertyTrackApi.Controllers
 {
@@ -15,27 +15,26 @@ namespace PropertyTrackApi.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly PropertyTrackContext _context;
+        private ICategoryService _categoryService;
 
-        public CategoriesController(PropertyTrackContext context)
+        public CategoriesController(PropertyTrackContext context, ICategoryService categoryService)
         {
             _context = context;
+            _categoryService = categoryService;
         }
 
         // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CategoryViewModel>>> GetCategories()
+        public async Task<ActionResult<List<CategoryViewModel>>> GetCategoriesAsync()
         {
-            return await _context.Categories
-                .Include(cat => cat.Items)
-                .Select(cat => new CategoryViewModel(cat))
-                .ToListAsync();
+            return await _categoryService.GetCategoriesAsync();
         }
 
         // GET: api/Categories/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetCategory(int id)
+        public async Task<ActionResult<BaseCategoryViewModel>> GetCategoryAsync(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
+            var category = await _categoryService.GetCategoryAsync(id);
 
             if (category == null)
             {
@@ -48,14 +47,7 @@ namespace PropertyTrackApi.Controllers
         [HttpGet("{id}/items")]
         public async Task<ActionResult<CategoryWithItemsViewModel>> GetCategoryWithItems(int id)
         {
-            var category = await _context.Categories
-                .Where(c => c.Id == id)
-                .Include(c => c.Items)
-                .Select(c => new CategoryWithItemsViewModel(c)
-                {
-                    Items = c.Items.Select(i => new ItemViewModel(i))
-                })
-                .FirstOrDefaultAsync();
+            var category = await _categoryService.GetCategoryWithItemsAsync(id);
 
             if (category == null)
             {
@@ -76,22 +68,17 @@ namespace PropertyTrackApi.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(category).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await _categoryService.UpdateCategoryAsync(id, category);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (NotFoundException)
             {
-                if (!CategoryExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
+            }
+            catch (DbUpdateException)
+            {
+                return BadRequest();
             }
 
             return NoContent();
@@ -101,10 +88,9 @@ namespace PropertyTrackApi.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Category>> PostCategory(Category category)
+        public async Task<ActionResult<Category>> PostCategory([FromBody] Category category)
         {
-            _context.Categories.Add(category);
-            await _context.SaveChangesAsync();
+            await _categoryService.CreateCategoryAsync(category);
 
             return CreatedAtAction("GetCategory", new { id = category.Id }, category);
         }
@@ -113,21 +99,20 @@ namespace PropertyTrackApi.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Category>> DeleteCategory(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
+            try
+            {
+                await _categoryService.DeleteCategoryAsync(id);
+            }
+            catch (NotFoundException)
             {
                 return NotFound();
             }
+            catch (CategoryServiceException)
+            {
+                return BadRequest();
+            }
 
-            _context.Categories.Remove(category);
-            await _context.SaveChangesAsync();
-
-            return category;
-        }
-
-        private bool CategoryExists(int id)
-        {
-            return _context.Categories.Any(e => e.Id == id);
+            return NoContent();
         }
     }
 }

@@ -6,6 +6,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using PropertyTrackApi.Models;
 
+using Services;
+using Services.Impl;
+
 namespace PropertyTrackApi
 {
     public class Startup
@@ -22,6 +25,7 @@ namespace PropertyTrackApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<PropertyTrackContext>(opt => opt.UseInMemoryDatabase("PropertyTrackDB"));
+            services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
