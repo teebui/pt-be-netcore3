@@ -3,9 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PropertyTrackApi.Models;
+using PropertyTrackApi.Services.Exceptions;
 using PropertyTrackApi.ViewModels;
 
-namespace Services.Impl
+namespace PropertyTrackApi.Services.Impl
 {
     class ItemService : IItemService
     {

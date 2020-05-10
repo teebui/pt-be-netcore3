@@ -2,11 +2,11 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-
 using PropertyTrackApi.Models;
 using PropertyTrackApi.ViewModels;
+using PropertyTrackApi.Services.Exceptions;
 
-namespace Services.Impl
+namespace PropertyTrackApi.Services.Impl
 {
     public class CategoryService : ICategoryService
     {
@@ -102,5 +102,4 @@ namespace Services.Impl
         private static void ThrowNotFoundException(int catId)
          => throw new NotFoundException($"The requested Category Id {catId} does not exist");
     }
-
 }

@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Services;
-using ViewModels;
+using PropertyTrackApi.Services;
+using PropertyTrackApi.ViewModels;
 
 namespace PropertyTrackApi.Controllers
 {

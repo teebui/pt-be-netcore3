@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ViewModels
+namespace PropertyTrackApi.ViewModels
 {
     public class AuthenticationViewModel
     {

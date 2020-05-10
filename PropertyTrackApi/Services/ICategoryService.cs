@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using PropertyTrackApi.Models;
 using PropertyTrackApi.ViewModels;
 
-namespace Services
+namespace PropertyTrackApi.Services
 {
     public interface ICategoryService
     {

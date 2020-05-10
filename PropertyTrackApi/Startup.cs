@@ -6,8 +6,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using PropertyTrackApi.Models;
 
-using Services;
-using Services.Impl;
+using PropertyTrackApi.Services;
+using PropertyTrackApi.Services.Impl;
 using PropertyTrackApi.Helpers;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

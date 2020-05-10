@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PropertyTrackApi.Models;
 using PropertyTrackApi.ViewModels;
-using Services;
+using PropertyTrackApi.Services;
+using PropertyTrackApi.Services.Exceptions;
 
 namespace PropertyTrackApi.Controllers
 {

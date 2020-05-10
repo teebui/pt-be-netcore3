@@ -1,6 +1,6 @@
-using Models;
+using PropertyTrackApi.Models;
 
-namespace ViewModels
+namespace PropertyTrackApi.ViewModels
 {
     public class UserViewModel
     {

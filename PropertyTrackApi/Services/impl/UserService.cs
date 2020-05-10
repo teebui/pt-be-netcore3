@@ -7,11 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Models;
+using PropertyTrackApi.Models;
 using PropertyTrackApi.Helpers;
-using ViewModels;
+using PropertyTrackApi.ViewModels;
 
-namespace Services.Impl
+namespace PropertyTrackApi.Services.Impl
 {
     class UserService : IUserService
     {

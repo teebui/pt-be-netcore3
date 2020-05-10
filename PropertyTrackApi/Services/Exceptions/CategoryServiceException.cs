@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Services
+namespace PropertyTrackApi.Services.Exceptions
 {
     [Serializable]
     internal class CategoryServiceException : Exception

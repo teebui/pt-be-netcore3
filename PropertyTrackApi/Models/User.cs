@@ -1,4 +1,4 @@
-namespace Models
+namespace PropertyTrackApi.Models
 {
     public class User
     {
