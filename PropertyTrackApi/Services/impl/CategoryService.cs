@@ -1,9 +1,8 @@
-using System;
-using System.Data.Common;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+
 using PropertyTrackApi.Models;
 using PropertyTrackApi.ViewModels;
 

@@ -14,13 +14,11 @@ namespace PropertyTrackApi.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly PropertyTrackContext _context;
         private ICategoryService _categoryService;
 
-        public CategoriesController(PropertyTrackContext context, ICategoryService categoryService)
+        public CategoriesController(ICategoryService categoryService)
         {
-            _context = context;
-            _categoryService = categoryService;
+            _categoryService = categoryService ?? throw new ArgumentNullException(nameof(categoryService));
         }
 
         // GET: api/Categories
