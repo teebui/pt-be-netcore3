@@ -42,6 +42,7 @@ namespace PropertyTrackApi.Services.Impl
             if (user == null)
                 return null;
 
+            // TODO: Put this stuff to Security helpers, etc
             // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = GetTokenDescriptor(user);
