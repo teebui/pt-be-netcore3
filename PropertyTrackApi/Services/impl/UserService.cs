@@ -67,5 +67,4 @@ namespace PropertyTrackApi.Services.Impl
             };
         }
     }
-
 }
