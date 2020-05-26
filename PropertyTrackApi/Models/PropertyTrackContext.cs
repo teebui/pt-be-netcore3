@@ -9,6 +9,9 @@ namespace PropertyTrackApi.Models
         {
         }
 
+        // protected override void OnConfiguring(DbContextOptionsBuilder options)
+        //     => options.UseSqlite("Data Source=propertytrackdb.db");
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Item>()

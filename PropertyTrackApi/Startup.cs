@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -52,7 +53,8 @@ namespace PropertyTrackApi
                 };
             });
 
-            services.AddDbContext<PropertyTrackContext>(opt => opt.UseInMemoryDatabase("PropertyTrackDB"));
+            // services.AddDbContext<PropertyTrackContext>(opt => opt.UseInMemoryDatabase("PropertyTrackDB"));
+            services.AddDbContext<PropertyTrackContext>(opt => opt.UseSqlite("Data Source=./Resources/Databases/propertytrackdb.db"));
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IUserService, UserService>();
@@ -81,12 +83,18 @@ namespace PropertyTrackApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, PropertyTrackContext dbOpt)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+            }
+
+            dbOpt.Database.EnsureCreated();
 
             app.UseCors(MyAllowSpecificOrigins);
 
