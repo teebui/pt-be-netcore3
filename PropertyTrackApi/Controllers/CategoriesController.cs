@@ -33,27 +33,27 @@ namespace PropertyTrackApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<BaseCategoryViewModel>> GetCategoryAsync(int id)
         {
-            var category = await _categoryService.GetCategoryAsync(id);
-
-            if (category == null)
+            try
+            {
+                return await _categoryService.GetCategoryAsync(id);
+            }
+            catch (NotFoundException)
             {
                 return NotFound();
             }
-
-            return category;
         }
 
         [HttpGet("{id}/items")]
         public async Task<ActionResult<CategoryWithItemsViewModel>> GetCategoryWithItems(int id)
         {
-            var category = await _categoryService.GetCategoryWithItemsAsync(id);
-
-            if (category == null)
+            try
+            {
+                return await _categoryService.GetCategoryWithItemsAsync(id);
+            }
+            catch (NotFoundException)
             {
                 return NotFound();
             }
-
-            return category;
         }
 
         // PUT: api/Categories/5

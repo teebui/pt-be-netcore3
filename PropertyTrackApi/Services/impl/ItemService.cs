@@ -47,6 +47,11 @@ namespace PropertyTrackApi.Services.Impl
             var item = await _context.Items
                 .Include(x => x.Category)
                 .FirstOrDefaultAsync(x => x.Id.Equals(id));
+
+            if (item == null)
+            {
+                ThrowNotFoundException(id);
+            }
             
             return new ItemViewModel(item);
         }

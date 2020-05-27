@@ -34,14 +34,14 @@ namespace PropertyTrackApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ItemViewModel>> GetItem(int id)
         {
-            var item = await _itemService.GetItemAsync(id);
-
-            if (item == null)
+            try
+            {
+                return  await _itemService.GetItemAsync(id);
+            }
+            catch(NotFoundException)
             {
                 return NotFound();
             }
-
-            return item;
         }
 
         // PUT: api/Items/5
@@ -55,9 +55,19 @@ namespace PropertyTrackApi.Controllers
                 return BadRequest();
             }
 
-            await _itemService.UpdateItemAsync(id, item);   
-
-            return NoContent();
+            try
+            {
+                await _itemService.UpdateItemAsync(id, item);   
+                return NoContent();
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch(ItemServiceException)
+            {
+                return BadRequest();
+            }
         }
 
         // POST: api/Items

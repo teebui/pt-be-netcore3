@@ -26,12 +26,19 @@ namespace PropertyTrackApi.Services.Impl
 
         public async Task<BaseCategoryViewModel> GetCategoryAsync(int id)
         {
-            return new BaseCategoryViewModel(await _context.Categories.FindAsync((int)id));
+            var cat = await _context.Categories.FindAsync((int)id);
+
+            if (cat == null)
+            {
+                ThrowNotFoundException(id);
+            }
+
+            return new BaseCategoryViewModel(cat);
 
         }
         public async Task<CategoryWithItemsViewModel> GetCategoryWithItemsAsync(int categoryId)
         {
-            return await _context.Categories
+            var category = await _context.Categories
                 .Where(c => c.Id == categoryId)
                 .Include(c => c.Items)
                 .Select(c => new CategoryWithItemsViewModel(c)
@@ -39,6 +46,13 @@ namespace PropertyTrackApi.Services.Impl
                     Items = c.Items.Select(i => new ItemViewModel(i))
                 })
                 .FirstOrDefaultAsync();
+
+            if (category == null)
+            {
+                ThrowNotFoundException(categoryId);
+            }
+
+            return category;
         }
 
         public async Task UpdateCategoryAsync(int catId, Category category)
@@ -91,13 +105,10 @@ namespace PropertyTrackApi.Services.Impl
             {
                 throw new CategoryServiceException($"Cannot delete requested category: {catId}.", ex);
             }
-
         }
 
-        private async Task<bool> CategoryExistsAsync(int id)
-        {
-            return await _context.Categories.AnyAsync(e => e.Id == id);
-        }
+        private async Task<bool> CategoryExistsAsync(int id) 
+         => await _context.Categories.AnyAsync(e => e.Id == id);
 
         private static void ThrowNotFoundException(int catId)
          => throw new NotFoundException($"The requested Category Id {catId} does not exist");
